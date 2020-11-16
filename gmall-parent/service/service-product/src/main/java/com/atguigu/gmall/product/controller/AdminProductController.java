@@ -1,11 +1,9 @@
 package com.atguigu.gmall.product.controller;
 
 import com.atguigu.gmall.common.result.Result;
-import com.atguigu.gmall.model.product.BaseAttrInfo;
-import com.atguigu.gmall.model.product.BaseCategory1;
-import com.atguigu.gmall.model.product.BaseCategory2;
-import com.atguigu.gmall.model.product.BaseCategory3;
+import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.service.AdminProductService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,13 +24,29 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @ApiOperation("获取品牌分页列表")
+    @GetMapping("/baseTrademark/{page}/{limit}")
+    public Result getTrademarkList(@PathVariable int page,@PathVariable int limit){
+        IPage<BaseTrademark> trademarkIPage = adminProductService.getTrademarkList(page,limit);
+        return Result.ok(trademarkIPage);
+    }
+
+
+    @ApiOperation("根据ID获取平台属性")
+    @GetMapping("getAttrValueList/{id}")
+    public Result getAttrValueList(@PathVariable long id){
+        List<BaseAttrValue> baseAttrValueList = adminProductService.getAttrValueList(id);
+        return Result.ok(baseAttrValueList);
+    }
+
+
+
     @ApiOperation("添加平台属性")
     @PostMapping("/saveAttrInfo")
     public Result saveAttrInfo(@RequestBody BaseAttrInfo baseAttrInfo){
         adminProductService.saveAttrInfo(baseAttrInfo);
         return Result.ok();
     }
-
 
 
     @ApiOperation("根据分类id获取平台属性")

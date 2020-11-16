@@ -1,9 +1,7 @@
 package com.atguigu.gmall.product.service;
 
-import com.atguigu.gmall.model.product.BaseAttrInfo;
-import com.atguigu.gmall.model.product.BaseCategory1;
-import com.atguigu.gmall.model.product.BaseCategory2;
-import com.atguigu.gmall.model.product.BaseCategory3;
+import com.atguigu.gmall.model.product.*;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -21,4 +19,8 @@ public interface AdminProductService {
     List<BaseAttrInfo> getAttrInfoById(String category1Id,String category2Id,String category3Id);
 
     void saveAttrInfo(BaseAttrInfo baseAttrInfo);
+
+    List<BaseAttrValue> getAttrValueList(long id);
+
+    IPage<BaseTrademark> getTrademarkList(int page, int limit);
 }

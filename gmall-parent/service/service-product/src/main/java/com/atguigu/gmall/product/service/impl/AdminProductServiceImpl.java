@@ -5,6 +5,8 @@ import com.atguigu.gmall.product.mapper.*;
 import com.atguigu.gmall.product.service.AdminProductService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Autowired
     private BaseAttrValueMapper baseAttrValueMapper;
+
+    @Autowired
+    private BaseTrademarkMapper baseTrademarkMapper;
 
     @Override
     public List<BaseCategory1> getCategory1() {
@@ -65,4 +70,18 @@ public class AdminProductServiceImpl implements AdminProductService {
         });
     }
 
+    //根据Id获取平台属性
+    @Override
+    public List<BaseAttrValue> getAttrValueList(long id) {
+        QueryWrapper<BaseAttrValue> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("attr_id",id);
+        return baseAttrValueMapper.selectList(queryWrapper);
+
+    }
+
+    //获取品牌分页列表
+    @Override
+    public IPage<BaseTrademark> getTrademarkList(int page, int limit) {
+        return baseTrademarkMapper.selectPage(new Page<>(page,limit),null);
+    }
 }
