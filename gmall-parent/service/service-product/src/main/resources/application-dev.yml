@@ -12,12 +12,12 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: http://127.0.0.1:8080
+        dashboard: http://106.14.242.86:8858
   rabbitmq:
     host: 106.14.242.86
-    port: 9672
-    username: admin
-    password: admin
+    port: 15672
+    username: guest
+    password: guest
   redis:
     host: 106.14.242.86
     port: 16379

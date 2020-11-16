@@ -23,4 +23,10 @@ public interface AdminProductService {
     List<BaseAttrValue> getAttrValueList(long id);
 
     IPage<BaseTrademark> getTrademarkList(int page, int limit);
+
+    List<BaseTrademark> getTrademarkList2();
+
+    List<BaseSaleAttr> getSaleAttr();
+
+    IPage<SpuInfo> getSpuPagesList(int page, int limit,int id);
 }

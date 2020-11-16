@@ -24,6 +24,31 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @ApiOperation("获取spu分页列表")
+    @GetMapping("/{page}/{limit}")
+    public Result getSpuPagesList(@PathVariable int page,@PathVariable int limit,@RequestParam(value = "category3Id",required = false) int id){
+        IPage<SpuInfo> infoIPage = adminProductService.getSpuPagesList(page,limit,id);
+        return Result.ok(infoIPage);
+    }
+
+
+
+    @ApiOperation("获取销售属性")
+    @GetMapping("/baseSaleAttrList")
+    public Result getSaleAttr(){
+        List<BaseSaleAttr> saleAttrList = adminProductService.getSaleAttr();
+        return Result.ok(saleAttrList);
+    }
+
+
+    @ApiOperation("获取品牌列表")
+    @GetMapping("/baseTrademark/getTrademarkList")
+    public Result getTrademarkList2(){
+        List<BaseTrademark> trademarkList = adminProductService.getTrademarkList2();
+        return Result.ok(trademarkList);
+    }
+
+
     @ApiOperation("获取品牌分页列表")
     @GetMapping("/baseTrademark/{page}/{limit}")
     public Result getTrademarkList(@PathVariable int page,@PathVariable int limit){

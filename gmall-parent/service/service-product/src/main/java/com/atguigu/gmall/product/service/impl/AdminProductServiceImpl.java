@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,12 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Autowired
     private BaseTrademarkMapper baseTrademarkMapper;
+
+    @Autowired
+    private BaseSaleAttrMapper baseSaleAttrMapper;
+
+    @Autowired
+    private SpuInfoMapper spuInfoMapper;
 
     @Override
     public List<BaseCategory1> getCategory1() {
@@ -79,9 +86,28 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     }
 
+    //获取品牌列表
+    @Override
+    public List<BaseTrademark> getTrademarkList2() {
+        return baseTrademarkMapper.selectList(null);
+    }
+
     //获取品牌分页列表
     @Override
     public IPage<BaseTrademark> getTrademarkList(int page, int limit) {
         return baseTrademarkMapper.selectPage(new Page<>(page,limit),null);
+    }
+
+    //获取销售属性
+    @Override
+    public List<BaseSaleAttr> getSaleAttr() {
+        return baseSaleAttrMapper.selectList(null);
+    }
+
+    @Override
+    public IPage<SpuInfo> getSpuPagesList(int page, int limit,int id) {
+        QueryWrapper<SpuInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("category3_id",id);
+        return spuInfoMapper.selectPage(new Page<>(page,limit),queryWrapper);
     }
 }
