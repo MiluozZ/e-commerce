@@ -1,5 +1,6 @@
 package com.atguigu.gmall.product.service;
 
+import com.atguigu.gmall.model.product.BaseAttrInfo;
 import com.atguigu.gmall.model.product.BaseCategory1;
 import com.atguigu.gmall.model.product.BaseCategory2;
 import com.atguigu.gmall.model.product.BaseCategory3;
@@ -16,4 +17,6 @@ public interface AdminProductService {
     List<BaseCategory2> getCategory2(String id);
 
     List<BaseCategory3> getCategory3(String id);
+
+    List<BaseAttrInfo> getAttrInfoById(String category1Id,String category2Id,String category3Id);
 }

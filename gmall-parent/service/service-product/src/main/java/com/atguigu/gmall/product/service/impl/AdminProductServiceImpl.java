@@ -1,8 +1,10 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.atguigu.gmall.model.product.BaseAttrInfo;
 import com.atguigu.gmall.model.product.BaseCategory1;
 import com.atguigu.gmall.model.product.BaseCategory2;
 import com.atguigu.gmall.model.product.BaseCategory3;
+import com.atguigu.gmall.product.mapper.BaseAttrInfoMapper;
 import com.atguigu.gmall.product.mapper.BaseCategory1Mapper;
 import com.atguigu.gmall.product.mapper.BaseCategory2Mapper;
 import com.atguigu.gmall.product.mapper.BaseCategory3Mapper;
@@ -29,6 +31,9 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Autowired
     private BaseCategory3Mapper baseCategory3Mapper;
 
+    @Autowired
+    private BaseAttrInfoMapper baseAttrInfoMapper;
+
     @Override
     public List<BaseCategory1> getCategory1() {
         return baseCategory1Mapper.selectList(null);
@@ -47,4 +52,11 @@ public class AdminProductServiceImpl implements AdminProductService {
         queryWrapper.eq("category2_id",id);
         return baseCategory3Mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public List<BaseAttrInfo> getAttrInfoById(String category1Id,String category2Id,String category3Id) {
+
+        return baseAttrInfoMapper.getAttrInfoById(category1Id,category2Id,category3Id);
+    }
+
 }
