@@ -26,6 +26,15 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @ApiOperation("添加平台属性")
+    @PostMapping("/saveAttrInfo")
+    public Result saveAttrInfo(@RequestBody BaseAttrInfo baseAttrInfo){
+        adminProductService.saveAttrInfo(baseAttrInfo);
+        return Result.ok();
+    }
+
+
+
     @ApiOperation("根据分类id获取平台属性")
     @GetMapping("/attrInfoList/{category1Id}/{category2Id}/{category3Id}")
     public Result getAttrInfoById(

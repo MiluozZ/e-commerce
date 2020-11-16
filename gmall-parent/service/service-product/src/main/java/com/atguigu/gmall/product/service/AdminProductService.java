@@ -19,4 +19,6 @@ public interface AdminProductService {
     List<BaseCategory3> getCategory3(String id);
 
     List<BaseAttrInfo> getAttrInfoById(String category1Id,String category2Id,String category3Id);
+
+    void saveAttrInfo(BaseAttrInfo baseAttrInfo);
 }

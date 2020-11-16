@@ -1,13 +1,7 @@
 package com.atguigu.gmall.product.service.impl;
 
-import com.atguigu.gmall.model.product.BaseAttrInfo;
-import com.atguigu.gmall.model.product.BaseCategory1;
-import com.atguigu.gmall.model.product.BaseCategory2;
-import com.atguigu.gmall.model.product.BaseCategory3;
-import com.atguigu.gmall.product.mapper.BaseAttrInfoMapper;
-import com.atguigu.gmall.product.mapper.BaseCategory1Mapper;
-import com.atguigu.gmall.product.mapper.BaseCategory2Mapper;
-import com.atguigu.gmall.product.mapper.BaseCategory3Mapper;
+import com.atguigu.gmall.model.product.*;
+import com.atguigu.gmall.product.mapper.*;
 import com.atguigu.gmall.product.service.AdminProductService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -34,6 +28,9 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Autowired
     private BaseAttrInfoMapper baseAttrInfoMapper;
 
+    @Autowired
+    private BaseAttrValueMapper baseAttrValueMapper;
+
     @Override
     public List<BaseCategory1> getCategory1() {
         return baseCategory1Mapper.selectList(null);
@@ -57,6 +54,15 @@ public class AdminProductServiceImpl implements AdminProductService {
     public List<BaseAttrInfo> getAttrInfoById(String category1Id,String category2Id,String category3Id) {
 
         return baseAttrInfoMapper.getAttrInfoById(category1Id,category2Id,category3Id);
+    }
+
+    @Override
+    public void saveAttrInfo(BaseAttrInfo baseAttrInfo) {
+        baseAttrInfoMapper.insert(baseAttrInfo);
+        baseAttrInfo.getAttrValueList().forEach((baseAttrValue) ->{
+            baseAttrValue.setAttrId(baseAttrInfo.getId());
+            baseAttrValueMapper.insert(baseAttrValue);
+        });
     }
 
 }
