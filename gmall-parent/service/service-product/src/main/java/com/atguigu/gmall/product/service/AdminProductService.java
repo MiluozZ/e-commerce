@@ -39,4 +39,8 @@ public interface AdminProductService {
     void saveSkuInfo(SkuInfo skuInfo);
 
     IPage<SkuInfo> getSkuPagesList(int page, int limit);
+
+    void onSale(Long skuId);
+
+    void cancelSale(Long skuId);
 }

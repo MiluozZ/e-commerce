@@ -192,4 +192,23 @@ public class AdminProductServiceImpl implements AdminProductService {
     public IPage<SkuInfo> getSkuPagesList(int page, int limit) {
         return skuInfoMapper.selectPage(new Page<>(page,limit),null);
     }
+
+    //商品上架
+    @Override
+    public void onSale(Long skuId) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(1);
+        skuInfoMapper.updateById(skuInfo);
+        //TODO
+    }
+
+    @Override
+    public void cancelSale(Long skuId) {
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(0);
+        skuInfoMapper.updateById(skuInfo);
+        //TODO
+    }
 }

@@ -24,6 +24,21 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @ApiOperation("商品下架")
+    @GetMapping("/cancelSale/{skuId}")
+    public Result cancelSale(@PathVariable(name = "skuId") Long skuId){
+        adminProductService.cancelSale(skuId);
+        return Result.ok();
+    }
+
+    @ApiOperation("商品上架")
+    @GetMapping("/onSale/{skuId}")
+    public Result onSale(@PathVariable(name = "skuId") Long skuId){
+        adminProductService.onSale(skuId);
+        return Result.ok();
+    }
+
+
     @ApiOperation("获取sku分页列表")
     @GetMapping("/list/{page}/{limit}")
     public Result getSkuPagesList(@PathVariable int page,@PathVariable int limit){
