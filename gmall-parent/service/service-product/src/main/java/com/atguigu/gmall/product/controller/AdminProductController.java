@@ -24,6 +24,20 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @ApiOperation("获取sku分页列表")
+    @GetMapping("/list/{page}/{limit}")
+    public Result getSkuPagesList(@PathVariable int page,@PathVariable int limit){
+        IPage<SkuInfo> skuInfoList = adminProductService.getSkuPagesList(page,limit);
+        return Result.ok(skuInfoList);
+    }
+
+    @ApiOperation("添加sku")
+    @PostMapping("/saveSkuInfo")
+    private Result saveSkuInfo(@RequestBody SkuInfo skuInfo){
+        adminProductService.saveSkuInfo(skuInfo);
+        return Result.ok();
+    }
+
     @ApiOperation("根据spuId获取销售属性")
     @GetMapping("/spuSaleAttrList/{spuId}")
     public Result getSpuSaleAttrList(@PathVariable long spuId){

@@ -35,4 +35,8 @@ public interface AdminProductService {
     List<SpuImage> getSpuImageListBySpuId(long spuId);
 
     List<SpuSaleAttr> getSpuSaleAttrList(long spuId);
+
+    void saveSkuInfo(SkuInfo skuInfo);
+
+    IPage<SkuInfo> getSkuPagesList(int page, int limit);
 }

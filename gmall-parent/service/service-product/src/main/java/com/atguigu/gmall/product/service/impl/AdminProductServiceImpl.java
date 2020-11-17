@@ -41,6 +41,14 @@ public class AdminProductServiceImpl implements AdminProductService {
     private SpuSaleAttrMapper spuSaleAttrMapper;
     @Autowired
     private SpuSaleAttrValueMapper spuSaleAttrValueMapper;
+    @Autowired
+    private SkuInfoMapper skuInfoMapper;
+    @Autowired
+    private SkuAttrValueMapper skuAttrValueMapper;
+    @Autowired
+    private SkuImageMapper skuImageMapper;
+    @Autowired
+    private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
 
 
 
@@ -151,5 +159,37 @@ public class AdminProductServiceImpl implements AdminProductService {
     public List<SpuSaleAttr> getSpuSaleAttrList(long spuId) {
 
         return spuSaleAttrMapper.getSpuSaleAttrList(spuId);
+    }
+
+    //添加sku
+    @Override
+    public void saveSkuInfo(SkuInfo skuInfo) {
+        //添加skuInfo表
+        skuInfoMapper.insert(skuInfo);
+
+        //添加skuImage表
+        skuInfo.getSkuImageList().forEach(skuImage -> {
+            skuImage.setSkuId(skuInfo.getId());
+            skuImageMapper.insert(skuImage);
+        });
+
+        //添加skuAttrValue表
+        skuInfo.getSkuAttrValueList().forEach(skuAttrValue -> {
+            skuAttrValue.setSkuId(skuInfo.getId());
+            skuAttrValueMapper.insert(skuAttrValue);
+        });
+
+        //添加skuSaleAttrValue表
+        skuInfo.getSkuSaleAttrValueList().forEach(skuSaleAttrValue -> {
+            skuSaleAttrValue.setSkuId(skuInfo.getId());
+            skuSaleAttrValue.setSpuId(skuInfo.getSpuId());
+            skuSaleAttrValueMapper.insert(skuSaleAttrValue);
+        });
+    }
+
+    //获取sku分页列表
+    @Override
+    public IPage<SkuInfo> getSkuPagesList(int page, int limit) {
+        return skuInfoMapper.selectPage(new Page<>(page,limit),null);
     }
 }
