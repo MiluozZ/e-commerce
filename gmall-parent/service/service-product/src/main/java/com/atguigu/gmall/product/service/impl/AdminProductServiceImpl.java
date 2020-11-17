@@ -21,27 +21,28 @@ import java.util.List;
 public class AdminProductServiceImpl implements AdminProductService {
     @Autowired
     private BaseCategory1Mapper baseCategory1Mapper;
-
     @Autowired
     private BaseCategory2Mapper baseCategory2Mapper;
-
     @Autowired
     private BaseCategory3Mapper baseCategory3Mapper;
-
     @Autowired
     private BaseAttrInfoMapper baseAttrInfoMapper;
-
     @Autowired
     private BaseAttrValueMapper baseAttrValueMapper;
-
     @Autowired
     private BaseTrademarkMapper baseTrademarkMapper;
-
     @Autowired
     private BaseSaleAttrMapper baseSaleAttrMapper;
-
     @Autowired
     private SpuInfoMapper spuInfoMapper;
+    @Autowired
+    private SpuImageMapper spuImageMapper;
+    @Autowired
+    private SpuSaleAttrMapper spuSaleAttrMapper;
+    @Autowired
+    private SpuSaleAttrValueMapper spuSaleAttrValueMapper;
+
+
 
     @Override
     public List<BaseCategory1> getCategory1() {
@@ -109,5 +110,46 @@ public class AdminProductServiceImpl implements AdminProductService {
         QueryWrapper<SpuInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category3_id",id);
         return spuInfoMapper.selectPage(new Page<>(page,limit),queryWrapper);
+    }
+
+
+    //添加spu
+    @Override
+    public void saveSpuInfo(SpuInfo spuInfo) {
+        //添加info表
+        spuInfoMapper.insert(spuInfo);
+
+        //添加image表
+        spuInfo.getSpuImageList().forEach(spuImage -> {
+            spuImage.setSpuId(spuInfo.getId());
+            spuImageMapper.insert(spuImage);
+        });
+
+        //添加attrlist表
+        spuInfo.getSpuSaleAttrList().forEach(spuSaleAttr -> {
+            spuSaleAttr.setSpuId(spuInfo.getId());
+            spuSaleAttrMapper.insert(spuSaleAttr);
+
+            //添加attrValuelist表
+            spuSaleAttr.getSpuSaleAttrValueList().forEach(spuSaleAttrValue -> {
+                spuSaleAttrValue.setSpuId(spuInfo.getId());
+                spuSaleAttrValue.setSaleAttrName(spuSaleAttr.getSaleAttrName());
+                spuSaleAttrValueMapper.insert(spuSaleAttrValue);
+            });
+        });
+
+    }
+
+    //根据spuId获取图片列表
+    @Override
+    public List<SpuImage> getSpuImageListBySpuId(long spuId) {
+        return spuImageMapper.selectList(new QueryWrapper<SpuImage>().eq("spu_id",spuId));
+    }
+
+    //根据spuId获取销售属性
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrList(long spuId) {
+
+        return spuSaleAttrMapper.getSpuSaleAttrList(spuId);
     }
 }

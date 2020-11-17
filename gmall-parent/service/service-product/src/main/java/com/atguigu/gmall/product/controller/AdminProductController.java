@@ -16,13 +16,35 @@ import java.util.List;
  * @author Miluo
  * @description
  **/
+
 @RestController
-@CrossOrigin
 @RequestMapping("/admin/product")
 @Api(tags = "后台商品管理")
 public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
+
+    @ApiOperation("根据spuId获取销售属性")
+    @GetMapping("/spuSaleAttrList/{spuId}")
+    public Result getSpuSaleAttrList(@PathVariable long spuId){
+        List<SpuSaleAttr> spuSaleAttrList = adminProductService.getSpuSaleAttrList(spuId);
+        return Result.ok(spuSaleAttrList);
+    }
+
+    @ApiOperation("根据spuId获取图片列表")
+    @GetMapping("/spuImageList/{spuId}")
+    public Result getSpuImageListBySpuId(@PathVariable long spuId){
+        List<SpuImage> spuImageList = adminProductService.getSpuImageListBySpuId(spuId);
+        return Result.ok(spuImageList);
+    }
+
+
+    @ApiOperation("添加spu")
+    @PostMapping("saveSpuInfo")
+    public Result saveSpuInfo(@RequestBody SpuInfo spuInfo){
+        adminProductService.saveSpuInfo(spuInfo);
+        return Result.ok();
+    }
 
     @ApiOperation("获取spu分页列表")
     @GetMapping("/{page}/{limit}")

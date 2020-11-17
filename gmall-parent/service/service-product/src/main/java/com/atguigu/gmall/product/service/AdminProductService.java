@@ -29,4 +29,10 @@ public interface AdminProductService {
     List<BaseSaleAttr> getSaleAttr();
 
     IPage<SpuInfo> getSpuPagesList(int page, int limit,int id);
+
+    void saveSpuInfo(SpuInfo spuInfo);
+
+    List<SpuImage> getSpuImageListBySpuId(long spuId);
+
+    List<SpuSaleAttr> getSpuSaleAttrList(long spuId);
 }
