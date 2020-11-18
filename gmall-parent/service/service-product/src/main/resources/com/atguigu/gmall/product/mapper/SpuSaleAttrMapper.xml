@@ -20,4 +20,28 @@
         ON ssa.`base_sale_attr_id` = ssav.`base_sale_attr_id` AND ssa.`spu_id` = ssav.`spu_id`
         WHERE ssa.`spu_id` = #{spuId}
     </select>
+
+    <resultMap id="getSpuSaleAttrListCheckBySkuMap" type="SpuSaleAttr">
+        <id column="id" property="id"></id>
+        <collection property="spuSaleAttrValueList" ofType="SpuSaleAttrValue">
+            <id column="vId" property="id"></id>
+        </collection>
+    </resultMap>
+    <select id="getSpuSaleAttrListCheckBySku" resultMap="getSpuSaleAttrListCheckBySkuMap">
+        SELECT
+            spsa.`id`,
+            spsa.`spu_id`,
+            spsa.`base_sale_attr_id`,
+            spsa.`sale_attr_name`,
+            spsav.`id` vId  ,
+            spsav.`sale_attr_value_name`,
+            sksav.`id` kId ,
+            sksav.`sku_id`,
+            IF(sku_id IS NULL,0,1) is_checked
+        FROM spu_sale_attr spsa INNER JOIN spu_sale_attr_value spsav
+        ON spsa.`base_sale_attr_id` = spsav.`base_sale_attr_id` AND spsa.`spu_id` = spsav.`spu_id`
+        LEFT JOIN sku_sale_attr_value sksav
+        ON sksav.`sale_attr_value_id` = spsav.`id` AND sku_id = #{skuId}
+        WHERE spsa.`spu_id` = #{spuId}
+    </select>
 </mapper>
