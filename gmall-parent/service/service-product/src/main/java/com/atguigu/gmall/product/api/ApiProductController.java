@@ -65,7 +65,7 @@ public class ApiProductController {
 
     @ApiOperation("根据skuID查询sku信息")
     @GetMapping("/inner/getSkuInfo/{skuId}")
-    public SkuInfo attrValueList(@PathVariable(value = "skuId") Long skuId){
+    public SkuInfo getSkuInfo(@PathVariable(value = "skuId") Long skuId){
         return apiProductService.getSkuInfo(skuId);
     }
 
