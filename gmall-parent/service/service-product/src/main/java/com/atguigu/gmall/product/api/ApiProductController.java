@@ -3,7 +3,6 @@ package com.atguigu.gmall.product.api;
 import com.atguigu.gmall.model.product.BaseCategoryView;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
-import com.atguigu.gmall.model.product.SpuSaleAttrValue;
 import com.atguigu.gmall.product.service.ApiProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,8 +50,7 @@ public class ApiProductController {
     @ApiOperation("根据skuId查询库存商品价格")
     @GetMapping("/inner/getSkuPrice/{skuId}")
     public BigDecimal getPriceById(@PathVariable(value = "skuId") Long skuId){
-        SkuInfo skuInfo = apiProductService.getSkuInfo(skuId);
-        return skuInfo.getPrice();
+        return apiProductService.getPrice(skuId);
     }
 
 

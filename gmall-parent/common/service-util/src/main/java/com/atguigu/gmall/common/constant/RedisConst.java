@@ -9,6 +9,10 @@ public class RedisConst {
 
     public static final String SKUKEY_PREFIX = "sku:";
     public static final String SKUKEY_SUFFIX = ":info";
+    public static final String CATEGORY_PREFIX = "category:";
+    public static final String SALE_PREFIX = "spu:";
+    public static final String POJO_PREFIX = "pojo:";
+
     //单位：秒
     public static final long SKUKEY_TIMEOUT = 24 * 60 * 60;
     //单位：秒 尝试获取锁的最大等待时间
