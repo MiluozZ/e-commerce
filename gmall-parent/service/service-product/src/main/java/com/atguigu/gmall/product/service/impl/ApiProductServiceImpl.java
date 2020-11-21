@@ -91,9 +91,8 @@ public class ApiProductServiceImpl implements ApiProductService {
 
                         //保存到redis中,避免缓存雪崩，过期时间随机设置
                         redisTemplate.opsForValue().set(redisKey,skuInfo,RedisConst.SKUKEY_TIMEOUT + new Random().nextInt(RedisConst.SECKILL__TIMEOUT),TimeUnit.SECONDS);
-
                     }
-
+                    redissonClient.getLock(lockKey).unlock();
                 }else {
                     //已经上锁则查询redis缓存
                     TimeUnit.MINUTES.sleep(1);
@@ -102,10 +101,7 @@ public class ApiProductServiceImpl implements ApiProductService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            redissonClient.getLock(lockKey).unlock();
         }
-
         return skuInfo;
     }
 
@@ -129,6 +125,7 @@ public class ApiProductServiceImpl implements ApiProductService {
                     }else{
                         redisTemplate.opsForValue().set(redisKey,categoryView,RedisConst.SKUKEY_TIMEOUT + new Random().nextInt(RedisConst.SECKILL__TIMEOUT),TimeUnit.SECONDS);
                     }
+                    redissonClient.getLock(lockKey).unlock();
                 }else{
                     TimeUnit.SECONDS.sleep(1);
                     categoryView = (BaseCategoryView) redisTemplate.opsForValue().get(redisKey);
@@ -138,7 +135,6 @@ public class ApiProductServiceImpl implements ApiProductService {
                 e.printStackTrace();
             }
 
-            redissonClient.getLock(lockKey).unlock();
         }
         return categoryView;
     }
@@ -163,6 +159,7 @@ public class ApiProductServiceImpl implements ApiProductService {
                     }else{
                         redisTemplate.opsForValue().set(redisKey,saleAttrs,RedisConst.SKUKEY_TIMEOUT + new Random().nextInt(RedisConst.SECKILL__TIMEOUT),TimeUnit.SECONDS);
                     }
+                    redissonClient.getLock(lockKey).unlock();
                 }else {
                     TimeUnit.SECONDS.sleep(1);
                     saleAttrs = (List<SpuSaleAttr>) redisTemplate.opsForValue().get(redisKey);
@@ -170,8 +167,6 @@ public class ApiProductServiceImpl implements ApiProductService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            redissonClient.getLock(lockKey).unlock();
         }
         return saleAttrs;
     }
@@ -193,6 +188,7 @@ public class ApiProductServiceImpl implements ApiProductService {
                     }else {
                         redisTemplate.opsForValue().set(redisKey,mapList,RedisConst.SKUKEY_TIMEOUT + new Random().nextInt(RedisConst.SECKILL__TIMEOUT),TimeUnit.SECONDS);
                     }
+                    redissonClient.getLock(lockKey).unlock();
                 }else {
                     TimeUnit.SECONDS.sleep(1);
                     mapList = (List<Map<String, String>>) redisTemplate.opsForValue().get(redisKey);
@@ -200,7 +196,7 @@ public class ApiProductServiceImpl implements ApiProductService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            redissonClient.getLock(lockKey).unlock();
+
         }
 
         return mapList;
