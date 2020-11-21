@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -20,26 +22,49 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ProductFeignClient productFeignClient;
 
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
+
     @Override
     public Map getItem(Long skuId) {
         Map map = new HashMap();
 
-        SkuInfo skuInfo = productFeignClient.getSkuInfo(skuId);
+        //异步编排
+        //当并发工作量少时，不建议创建线程池使用多线程，因为创建线程池非常消耗资源。
+        CompletableFuture<SkuInfo> skuInfoCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            SkuInfo skuInfo = productFeignClient.getSkuInfo(skuId);
+            map.put("skuInfo", skuInfo);
+            return skuInfo;
+        }, threadPoolExecutor);
 
-        BaseCategoryView categoryView = productFeignClient.getCategoryView(skuInfo.getCategory3Id());
+        //并行于skuInfoCompletableFuture
+        CompletableFuture<Void> priceCompletableFuture = CompletableFuture.runAsync(() -> {
+            BigDecimal skuPrice = productFeignClient.getSkuPrice(skuId);
+            map.put("price", skuPrice);
+        }, threadPoolExecutor);
 
-        BigDecimal skuPrice = productFeignClient.getSkuPrice(skuId);
+        //串行于skuInfoCompletableFuture
+        CompletableFuture<Void> categoryView1CompletableFuture = skuInfoCompletableFuture.thenAcceptAsync(skuInfo -> {
+            BaseCategoryView categoryView = productFeignClient.getCategoryView(skuInfo.getCategory3Id());
+            map.put("categoryView", categoryView);
+        }, threadPoolExecutor);
 
-        List<SpuSaleAttr> spuSaleAttrListCheckBySkuList = productFeignClient.
-                getSpuSaleAttrListCheckBySku(skuId, skuInfo.getSpuId());
+        //串行于skuInfoCompletableFuture
+        CompletableFuture<Void> spuSaleAttrListCompletableFuture = skuInfoCompletableFuture.thenAcceptAsync(skuInfo -> {
+            List<SpuSaleAttr> spuSaleAttrListCheckBySkuList = productFeignClient.
+                    getSpuSaleAttrListCheckBySku(skuId, skuInfo.getSpuId());
+            map.put("spuSaleAttrList", spuSaleAttrListCheckBySkuList);
+        }, threadPoolExecutor);
 
-        Map skuValueIdsMap = productFeignClient.getSkuValueIdsMap(skuInfo.getSpuId());
+        //串行于skuInfoCompletableFuture
+        CompletableFuture<Void> valuesSkuJsonCompletableFuture = skuInfoCompletableFuture.thenAcceptAsync(skuInfo -> {
+            Map skuValueIdsMap = productFeignClient.getSkuValueIdsMap(skuInfo.getSpuId());
+            map.put("valuesSkuJson", JSON.toJSONString(skuValueIdsMap));
+        }, threadPoolExecutor);
 
-        map.put("skuInfo",skuInfo);
-        map.put("categoryView",categoryView);
-        map.put("price",skuPrice);
-        map.put("spuSaleAttrList",spuSaleAttrListCheckBySkuList);
-        map.put("valuesSkuJson", JSON.toJSONString(skuValueIdsMap));
+
+        CompletableFuture.allOf(skuInfoCompletableFuture,priceCompletableFuture,categoryView1CompletableFuture,spuSaleAttrListCompletableFuture
+        ,valuesSkuJsonCompletableFuture).join();
 
         return map;
     }
