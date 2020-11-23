@@ -220,4 +220,10 @@ public class ApiProductServiceImpl implements ApiProductService {
         }
         return null;
     }
+
+    @Override
+    @GmallCache(prefix = "getCategory")
+    public List<BaseCategoryView> getCategory() {
+        return baseCategoryViewMapper.selectList(null);
+    }
 }

@@ -36,4 +36,7 @@ public interface ProductFeignClient {
     @GetMapping("/api/product/inner/getSkuValueIdsMap/{spuId}")
     Map getSkuValueIdsMap(@PathVariable("spuId") Long spuId);
 
+    @GetMapping("/api/product/inner/getCategoryView")
+    List<BaseCategoryView> getCategory();
+
 }

@@ -23,4 +23,6 @@ public interface ApiProductService {
     List<Map<String, String>> getSkuValueIdsMap(Long spuId);
 
     BigDecimal getPrice(Long skuId);
+
+    List<BaseCategoryView> getCategory();
 }

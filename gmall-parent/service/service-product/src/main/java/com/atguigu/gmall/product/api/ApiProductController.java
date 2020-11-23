@@ -67,4 +67,10 @@ public class ApiProductController {
         return apiProductService.getSkuInfo(skuId);
     }
 
+    @ApiOperation("查询所有分类信息")
+    @GetMapping("/inner/getCategoryView")
+    public List<BaseCategoryView> getCategory(){
+        return apiProductService.getCategory();
+    }
+
 }
