@@ -1,13 +1,12 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.atguigu.gmall.list.feign.ServiceListClient;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.mapper.*;
 import com.atguigu.gmall.product.service.AdminProductService;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +48,8 @@ public class AdminProductServiceImpl implements AdminProductService {
     private SkuImageMapper skuImageMapper;
     @Autowired
     private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+    @Autowired
+    private ServiceListClient serviceListClient;
 
 
 
@@ -200,7 +201,9 @@ public class AdminProductServiceImpl implements AdminProductService {
         skuInfo.setId(skuId);
         skuInfo.setIsSale(1);
         skuInfoMapper.updateById(skuInfo);
-        //TODO
+        //上架同时将信息传入ES索引库
+        serviceListClient.onSale(skuId);
+
     }
 
     @Override
@@ -209,6 +212,8 @@ public class AdminProductServiceImpl implements AdminProductService {
         skuInfo.setId(skuId);
         skuInfo.setIsSale(0);
         skuInfoMapper.updateById(skuInfo);
-        //TODO
+        //下架同时将信息从ES索引库删除
+        serviceListClient.cancelSale(skuId);
+
     }
 }

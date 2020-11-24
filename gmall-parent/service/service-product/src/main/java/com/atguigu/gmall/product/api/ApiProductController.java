@@ -1,6 +1,8 @@
 package com.atguigu.gmall.product.api;
 
+import com.atguigu.gmall.model.list.SearchAttr;
 import com.atguigu.gmall.model.product.BaseCategoryView;
+import com.atguigu.gmall.model.product.BaseTrademark;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.product.service.ApiProductService;
@@ -71,6 +73,18 @@ public class ApiProductController {
     @GetMapping("/inner/getCategoryView")
     public List<BaseCategoryView> getCategory(){
         return apiProductService.getCategory();
+    }
+
+    @ApiOperation("查询品牌信息")
+    @GetMapping("/inner/tradeMark/{skuId}")
+    public BaseTrademark getTradeMark(@PathVariable(name = "skuId")Long skuId){
+        return apiProductService.getTradeMark(skuId);
+    }
+
+    @ApiOperation("查询搜索属性")
+    @GetMapping("/inner/searchAttr/{skuId}")
+    public List<SearchAttr> getSearchAttr(@PathVariable(name = "skuId")Long skuId){
+        return apiProductService.getSearchAttr(skuId);
     }
 
 }

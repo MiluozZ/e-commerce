@@ -1,7 +1,9 @@
 package com.atguigu.gmall.product.service.impl;
 
 import com.atguigu.gmall.common.cache.GmallCache;
+import com.atguigu.gmall.model.list.SearchAttr;
 import com.atguigu.gmall.model.product.BaseCategoryView;
+import com.atguigu.gmall.model.product.BaseTrademark;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.product.mapper.*;
@@ -59,6 +61,9 @@ public class ApiProductServiceImpl implements ApiProductService {
     private RedisTemplate redisTemplate;
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private SearchAttrMapper searchAttrMapper;
+
 
 
     //根据skuID查询sku信息
@@ -66,6 +71,7 @@ public class ApiProductServiceImpl implements ApiProductService {
     @GmallCache(prefix = "getSkuInfo")
     public SkuInfo getSkuInfo(Long skuId) {
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
+        return skuInfo;
 
 
 //        String redisKey= RedisConst.SKUKEY_PREFIX + skuId + RedisConst.SKUKEY_SUFFIX;
@@ -101,7 +107,6 @@ public class ApiProductServiceImpl implements ApiProductService {
 //                e.printStackTrace();
 //            }
 //        }
-        return skuInfo;
     }
 
 
@@ -221,9 +226,21 @@ public class ApiProductServiceImpl implements ApiProductService {
         return null;
     }
 
+    //查询首页分类页表
     @Override
-    @GmallCache(prefix = "getCategory")
     public List<BaseCategoryView> getCategory() {
         return baseCategoryViewMapper.selectList(null);
+    }
+
+    //查询品牌属性
+    @Override
+    public BaseTrademark getTradeMark(Long skuId) {
+        return baseTrademarkMapper.selectById(skuId);
+    }
+
+    //查询搜索属性
+    @Override
+    public List<SearchAttr> getSearchAttr(Long skuId) {
+        return searchAttrMapper.getSearchAttr(skuId);
     }
 }

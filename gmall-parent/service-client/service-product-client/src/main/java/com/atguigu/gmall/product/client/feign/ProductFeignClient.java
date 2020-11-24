@@ -1,6 +1,8 @@
 package com.atguigu.gmall.product.client.feign;
 
+import com.atguigu.gmall.model.list.SearchAttr;
 import com.atguigu.gmall.model.product.BaseCategoryView;
+import com.atguigu.gmall.model.product.BaseTrademark;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.product.client.feign.impl.ProductDegradeFeignClient;
@@ -38,5 +40,11 @@ public interface ProductFeignClient {
 
     @GetMapping("/api/product/inner/getCategoryView")
     List<BaseCategoryView> getCategory();
+
+    @GetMapping("/api/product/inner/tradeMark/{skuId}")
+    BaseTrademark getTradeMark(@PathVariable(name = "skuId")Long skuId);
+
+    @GetMapping("/api/product/inner/searchAttr/{skuId}")
+    List<SearchAttr> getSearchAttr(@PathVariable(name = "skuId")Long skuId);
 
 }

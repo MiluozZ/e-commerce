@@ -1,6 +1,8 @@
 package com.atguigu.gmall.product.service;
 
+import com.atguigu.gmall.model.list.SearchAttr;
 import com.atguigu.gmall.model.product.BaseCategoryView;
+import com.atguigu.gmall.model.product.BaseTrademark;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 
@@ -25,4 +27,8 @@ public interface ApiProductService {
     BigDecimal getPrice(Long skuId);
 
     List<BaseCategoryView> getCategory();
+
+    BaseTrademark getTradeMark(Long skuId);
+
+    List<SearchAttr> getSearchAttr(Long skuId);
 }
