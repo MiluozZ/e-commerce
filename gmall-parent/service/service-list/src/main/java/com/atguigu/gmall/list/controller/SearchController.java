@@ -51,4 +51,11 @@ public class SearchController {
         return Result.ok();
     }
 
+    @ApiOperation("根据查询商品增加热度")
+    @GetMapping("/inner/hotScore/{skuId}")
+    public Result increaseHotScore(@PathVariable(name = "skuId")Long skuId){
+        listSearchService.increaseHotScore(skuId);
+        return Result.ok();
+    }
+
 }

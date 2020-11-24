@@ -9,10 +9,12 @@ import com.atguigu.gmall.model.product.BaseTrademark;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.product.client.feign.ProductFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Miluo
@@ -24,6 +26,8 @@ public class ListSearchServiceImpl implements ListSearchService {
     private ListSearchDao listSearchDao;
     @Autowired
     private ProductFeignClient productFeignClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     //上架
@@ -57,5 +61,17 @@ public class ListSearchServiceImpl implements ListSearchService {
     @Override
     public void cancelSale(Long skuId) {
         listSearchDao.deleteById(skuId);
+    }
+
+    //根据查询商品增加热度
+    @Override
+    public void increaseHotScore(Long skuId) {
+        Double score = redisTemplate.opsForZSet().incrementScore("hotScore", skuId, 1);
+        if ((score%10) == 0){
+            Optional<Goods> byId = listSearchDao.findById(skuId);
+            Goods goods = byId.get();
+            goods.setHotScore(Math.round(score));
+            listSearchDao.save(goods);
+        }
     }
 }

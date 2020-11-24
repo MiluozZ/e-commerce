@@ -8,4 +8,6 @@ public interface ListSearchService {
     void onSale(Long skuId);
 
     void cancelSale(Long skuId);
+
+    void increaseHotScore(Long skuId);
 }

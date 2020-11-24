@@ -24,4 +24,9 @@ public class ServiceListClientImpl implements ServiceListClient {
     public Result cancelSale(Long skuId) {
         return null;
     }
+
+    @Override
+    public Result increaseHotScore(Long skuId) {
+        return null;
+    }
 }

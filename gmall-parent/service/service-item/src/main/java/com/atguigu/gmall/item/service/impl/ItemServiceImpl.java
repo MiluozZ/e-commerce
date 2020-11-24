@@ -2,6 +2,7 @@ package com.atguigu.gmall.item.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.item.service.ItemService;
+import com.atguigu.gmall.list.feign.ServiceListClient;
 import com.atguigu.gmall.model.product.BaseCategoryView;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
@@ -24,6 +25,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ThreadPoolExecutor threadPoolExecutor;
+
+    @Autowired
+    private ServiceListClient serviceListClient;
 
     @Override
     public Map getItem(Long skuId) {
@@ -62,6 +66,9 @@ public class ItemServiceImpl implements ItemService {
             map.put("valuesSkuJson", JSON.toJSONString(skuValueIdsMap));
         }, threadPoolExecutor);
 
+        CompletableFuture.runAsync(() ->{
+            serviceListClient.increaseHotScore(skuId);
+        },threadPoolExecutor);
 
         CompletableFuture.allOf(skuInfoCompletableFuture,priceCompletableFuture,categoryView1CompletableFuture,spuSaleAttrListCompletableFuture
         ,valuesSkuJsonCompletableFuture).join();
