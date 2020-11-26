@@ -3,14 +3,13 @@ package com.atguigu.gmall.list.controller;
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.list.service.ListSearchService;
 import com.atguigu.gmall.model.list.Goods;
+import com.atguigu.gmall.model.list.SearchParam;
+import com.atguigu.gmall.model.list.SearchResponseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Miluo
@@ -56,6 +55,12 @@ public class SearchController {
     public Result increaseHotScore(@PathVariable(name = "skuId")Long skuId){
         listSearchService.increaseHotScore(skuId);
         return Result.ok();
+    }
+
+    @ApiOperation("商品搜索")
+    @PostMapping()
+    public SearchResponseVo search(@RequestBody SearchParam searchParam){
+        return listSearchService.search(searchParam);
     }
 
 }
