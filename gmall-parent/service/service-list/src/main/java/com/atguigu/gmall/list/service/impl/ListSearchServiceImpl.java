@@ -149,9 +149,9 @@ public class ListSearchServiceImpl implements ListSearchService {
             SearchResponseTmVo searchResponseTmVo = new SearchResponseTmVo();
             searchResponseTmVo.setTmId(Long.parseLong(bucket.getKeyAsString()));
             ParsedStringTerms tmNameAgg = (ParsedStringTerms) bucket.getAggregations().asMap().get("tmNameAgg");
-            searchResponseTmVo.setTmName(tmNameAgg.getBuckets().get(0).toString());
+            searchResponseTmVo.setTmName(tmNameAgg.getBuckets().get(0).getKeyAsString());
             ParsedStringTerms tmLogoUrlAgg = (ParsedStringTerms) bucket.getAggregations().asMap().get("tmLogoUrlAgg");
-            searchResponseTmVo.setTmLogoUrl(tmLogoUrlAgg.getBuckets().get(0).toString());
+            searchResponseTmVo.setTmLogoUrl(tmLogoUrlAgg.getBuckets().get(0).getKeyAsString());
             return searchResponseTmVo;
         }).collect(Collectors.toList());
         responseVo.setTrademarkList(responseTmVos);
@@ -163,7 +163,7 @@ public class ListSearchServiceImpl implements ListSearchService {
             SearchResponseAttrVo responseAttrVo = new SearchResponseAttrVo();
             responseAttrVo.setAttrId(Long.parseLong(bucket.getKeyAsString()));
             ParsedStringTerms attrNameAgg = (ParsedStringTerms) bucket.getAggregations().get("attrNameAgg");
-            responseAttrVo.setAttrName(attrNameAgg.getBuckets().get(0).toString());
+            responseAttrVo.setAttrName(attrNameAgg.getBuckets().get(0).getKeyAsString());
             ParsedStringTerms attrValueAgg = bucket.getAggregations().get("attrValueAgg");
             responseAttrVo.setAttrValueList(attrValueAgg.getBuckets().stream().map(MultiBucketsAggregation.Bucket::getKeyAsString).collect(Collectors.toList()));
             return responseAttrVo;
@@ -258,7 +258,7 @@ public class ListSearchServiceImpl implements ListSearchService {
 
 
         //8.品牌聚合
-        searchSourceBuilder.aggregation(
+        searchSourceBuilder.aggregation(  // select max(tmId) tmIdAgg from 表
                 AggregationBuilders.terms("tmIdAgg").field("tmId")
                         .subAggregation(AggregationBuilders.terms("tmNameAgg").field("tmName"))
                         .subAggregation(AggregationBuilders.terms("tmLogoUrlAgg").field("tmLogoUrl"))
@@ -270,8 +270,7 @@ public class ListSearchServiceImpl implements ListSearchService {
                 AggregationBuilders.nested("attrsAgg","attrs")
                         .subAggregation(AggregationBuilders.terms("attrIdAgg").field("attrs.attrId")
                                 .subAggregation(AggregationBuilders.terms("attrNameAgg").field("attrs.attrName"))
-                                .subAggregation(AggregationBuilders.terms("attrValueAgg").field("attrs.attrValue")))
-        );
+                                .subAggregation(AggregationBuilders.terms("attrValueAgg").field("attrs.attrValue"))));
 
         return searchSourceBuilder;
 
