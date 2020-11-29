@@ -22,6 +22,7 @@ public class ListController {
     @Autowired
     private ServiceListClient serviceListClient;
 
+    //搜索页面
     @GetMapping("/list.html")
     public String search(SearchParam searchParam, Model model){
         SearchResponseVo searchResponseVo = serviceListClient.search(searchParam);

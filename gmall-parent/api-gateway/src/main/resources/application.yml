@@ -16,6 +16,10 @@ spring:
           uri: lb://service-product
           predicates:
             - Path=/*/product/** # 路径匹配
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/*/user/**
         - id: service-item
           uri: lb://service-item
           predicates:
@@ -25,4 +29,5 @@ spring:
           uri: lb://web-all
           predicates:
             - Host=**.gmall.com
-
+auth:
+  url: /trade.html,/pay.html,/myOrder.html,/order.html

@@ -14,6 +14,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -180,7 +181,7 @@ public class ListSearchServiceImpl implements ListSearchService {
         //1.关键词
         String keyword = searchParam.getKeyword();
         if (!StringUtils.isEmpty(keyword)){
-            boolQueryBuilder.must(QueryBuilders.matchQuery("title",keyword));
+            boolQueryBuilder.must(QueryBuilders.matchQuery("title",keyword).operator(Operator.AND));
         }else {
             boolQueryBuilder.must(QueryBuilders.matchAllQuery());
         }
