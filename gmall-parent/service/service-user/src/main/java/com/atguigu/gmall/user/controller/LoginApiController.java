@@ -4,13 +4,13 @@ import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.user.UserInfo;
 import com.atguigu.gmall.user.service.LoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +20,7 @@ import java.util.UUID;
  * @description
  **/
 @RestController
+@Api(tags = "用户管理")
 @RequestMapping("/api/user/passport")
 public class LoginApiController {
     @Autowired
@@ -27,6 +28,8 @@ public class LoginApiController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    //用户登陆
+    @ApiOperation("用户登陆")
     @PostMapping("/login")
     public Result login(@RequestBody UserInfo userInfo){
         String loginName = userInfo.getLoginName();
@@ -49,7 +52,12 @@ public class LoginApiController {
         }else {
             return Result.fail().message("用户名密码错误");
         }
+    }
 
-
+    @ApiOperation("用户退出")
+    @GetMapping("/logout")
+    public Result logout(HttpServletRequest request){
+        loginService.logout(request);
+        return Result.ok();
     }
 }

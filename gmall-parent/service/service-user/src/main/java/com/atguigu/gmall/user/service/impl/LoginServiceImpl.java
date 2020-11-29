@@ -1,5 +1,6 @@
 package com.atguigu.gmall.user.service.impl;
 
+import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.common.util.MD5;
 import com.atguigu.gmall.model.user.UserInfo;
 import com.atguigu.gmall.user.mapper.LoginMapper;
@@ -8,6 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Miluo
@@ -30,5 +33,14 @@ public class LoginServiceImpl implements LoginService {
             return userInfo1;
         }
         return null;
+    }
+
+    //用户退出
+    @Override
+    public void logout(HttpServletRequest request) {
+        //redis中删除缓存用户信息
+        String token = request.getHeader("token");
+        redisTemplate.delete(RedisConst.USER_LOGIN_KEY_PREFIX +token);
+
     }
 }
