@@ -29,5 +29,19 @@ spring:
           uri: lb://web-all
           predicates:
             - Host=**.gmall.com
+  redis:
+    host: 106.14.242.86
+    port: 16379
+    database: 0
+    timeout: 1800000
+    password:
+    lettuce:
+      pool:
+        max-active: 20 #最大连接数
+        max-wait: -1    #最大阻塞等待时间(负数表示没限制)
+        max-idle: 5    #最大空闲
+        min-idle: 0     #最小空闲
 auth:
   url: /trade.html,/pay.html,/myOrder.html,/order.html
+login:
+  url: http://passport.gmall.com/login.html?originUrl=
