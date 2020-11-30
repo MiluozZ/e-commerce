@@ -103,6 +103,8 @@ public class LoginGlobalFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange);
     }
 
+
+
     //获取用户的临时ID
     private String getUserTempId(ServerHttpRequest request){
         //1：获取请求头
