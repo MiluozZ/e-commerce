@@ -45,4 +45,10 @@ public class CartController {
         model.addAttribute("cartInfo",cartInfo);
         return "cart/addCart";
     }
+
+    //购物车列表
+    @GetMapping("/cart.html")
+    private String cart(){
+        return "cart/index";
+    }
 }
