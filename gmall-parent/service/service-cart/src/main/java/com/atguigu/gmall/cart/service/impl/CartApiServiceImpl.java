@@ -2,6 +2,7 @@ package com.atguigu.gmall.cart.service.impl;
 
 import com.atguigu.gmall.cart.mapper.CartApiMapper;
 import com.atguigu.gmall.cart.service.CartApiService;
+import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.model.cart.CartInfo;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.product.client.feign.ProductFeignClient;
@@ -34,7 +35,7 @@ public class CartApiServiceImpl implements CartApiService {
     @Override
     public CartInfo addCart(Long skuId, Integer skuNum, String userId) {
         //优化:从redis查询是否拥有商品
-        CartInfo cartInfo = (CartInfo) redisTemplate.opsForHash().get(userId, skuId);
+        CartInfo cartInfo = (CartInfo) redisTemplate.opsForHash().get(RedisConst.USER_KEY_PREFIX + userId + RedisConst.USER_CART_KEY_SUFFIX, String.valueOf(skuId));
         if (null != cartInfo){
             //在购物车中，如包含商品，增加商品数量
             cartInfo.setSkuNum(cartInfo.getSkuNum() + skuNum);
@@ -124,7 +125,7 @@ public class CartApiServiceImpl implements CartApiService {
     //临时、永久用户只存其一时的购物车列表
     private List<CartInfo> cartListById(String id) {
         //优化：从redis当中查询
-        List<CartInfo> cartInfoList = (List<CartInfo>) redisTemplate.opsForHash().entries(id).values();
+        List<CartInfo> cartInfoList = redisTemplate.opsForHash().values(RedisConst.USER_KEY_PREFIX + id + RedisConst.USER_CART_KEY_SUFFIX);
 //        List<CartInfo> cartInfoList = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", id));
 
         for (CartInfo cartInfo : cartInfoList) {

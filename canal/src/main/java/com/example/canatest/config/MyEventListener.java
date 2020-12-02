@@ -51,6 +51,7 @@ public class MyEventListener {
         cartInfo.setImgUrl(attributes[5]);
         cartInfo.setSkuName(attributes[6]);
         cartInfo.setIsChecked(Integer.parseInt(attributes[7]));
-        redisTemplate.opsForHash().put(cartInfo.getUserId(),cartInfo.getSkuId(),cartInfo);
+        System.out.println(cartInfo.toString());
+        redisTemplate.opsForHash().put(RedisConst.USER_KEY_PREFIX + cartInfo.getUserId() + RedisConst.USER_CART_KEY_SUFFIX,String.valueOf(cartInfo.getSkuId()),cartInfo);
     }
 }
