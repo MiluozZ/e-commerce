@@ -121,6 +121,16 @@ public class CartApiServiceImpl implements CartApiService {
         }
     }
 
+    //更新购物车选中列表
+    @Override
+    public void checkCart(String userId, Long skuId, Integer isChecked) {
+        CartInfo cartInfo = new CartInfo();
+        cartInfo.setSkuId(skuId);
+        cartInfo.setUserId(userId);
+        cartInfo.setIsChecked(isChecked);
+        cartApiMapper.update(cartInfo,new QueryWrapper<CartInfo>().eq("user_id",userId).eq("sku_id",skuId));
+    }
+
 
     //临时、永久用户只存其一时的购物车列表
     private List<CartInfo> cartListById(String id) {
