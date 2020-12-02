@@ -7,6 +7,7 @@ import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.product.client.feign.ProductFeignClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,38 +26,53 @@ public class CartApiServiceImpl implements CartApiService {
     private CartApiMapper cartApiMapper;
     @Autowired
     private ProductFeignClient productFeignClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
+
+    //加入购物车
     @Override
     public CartInfo addCart(Long skuId, Integer skuNum, String userId) {
-        //判断购物车里是否拥有商品
-        List<CartInfo> cartInfos = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", userId));
-        for (CartInfo cartInfo : cartInfos) {
-            if (cartInfo.getSkuId() == skuId) {
-                //在购物车中，如包含商品，增加商品数量
-                cartInfo.setSkuNum(cartInfo.getSkuNum() + skuNum);
-                //保存到数据库中
-                cartApiMapper.updateById(cartInfo);
-
-                //返回添加的商品
-                CartInfo cartInfo1 = cartInfo;
-                cartInfo1.setSkuNum(skuNum);
-                return cartInfo1;
-            }
+        //优化:从redis查询是否拥有商品
+        CartInfo cartInfo = (CartInfo) redisTemplate.opsForHash().get(userId, skuId);
+        if (null != cartInfo){
+            //在购物车中，如包含商品，增加商品数量
+            cartInfo.setSkuNum(cartInfo.getSkuNum() + skuNum);
+            //返回添加的商品
+            CartInfo cartInfo1 = cartInfo;
+            cartInfo1.setSkuNum(skuNum);
+            return cartInfo1;
         }
+
+//        //判断购物车里是否拥有商品
+//        List<CartInfo> cartInfos = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", userId));
+//        for (CartInfo cartInfo : cartInfos) {
+//            if (cartInfo.getSkuId() == skuId) {
+//                //在购物车中，如包含商品，增加商品数量
+//                cartInfo.setSkuNum(cartInfo.getSkuNum() + skuNum);
+//                //保存到数据库中
+//                cartApiMapper.updateById(cartInfo);
+//
+//                //返回添加的商品
+//                CartInfo cartInfo1 = cartInfo;
+//                cartInfo1.setSkuNum(skuNum);
+//                return cartInfo1;
+//            }
+//        }
         //如不包含商品，则新增商品
         SkuInfo skuInfo = productFeignClient.getSkuInfo(skuId);
-        CartInfo cartInfo = new CartInfo();
-        cartInfo.setUserId(userId);
-        cartInfo.setSkuId(skuId);
-        cartInfo.setSkuNum(skuNum);
-        cartInfo.setImgUrl(skuInfo.getSkuDefaultImg());
-        cartInfo.setSkuName(skuInfo.getSkuName());
-        cartInfo.setIsChecked(1);
-        cartInfo.setCartPrice(skuInfo.getPrice());
+        CartInfo cartInfo2 = new CartInfo();
+        cartInfo2.setUserId(userId);
+        cartInfo2.setSkuId(skuId);
+        cartInfo2.setSkuNum(skuNum);
+        cartInfo2.setImgUrl(skuInfo.getSkuDefaultImg());
+        cartInfo2.setSkuName(skuInfo.getSkuName());
+        cartInfo2.setIsChecked(1);
+        cartInfo2.setCartPrice(skuInfo.getPrice());
         //保存到数据库中
-        cartApiMapper.insert(cartInfo);
+        cartApiMapper.insert(cartInfo2);
 
-        return cartInfo;
+        return cartInfo2;
     }
 
 
@@ -107,7 +123,10 @@ public class CartApiServiceImpl implements CartApiService {
 
     //临时、永久用户只存其一时的购物车列表
     private List<CartInfo> cartListById(String id) {
-        List<CartInfo> cartInfoList = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", id));
+        //优化：从redis当中查询
+        List<CartInfo> cartInfoList = (List<CartInfo>) redisTemplate.opsForHash().entries(id).values();
+//        List<CartInfo> cartInfoList = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", id));
+
         for (CartInfo cartInfo : cartInfoList) {
             cartInfo.setSkuPrice(productFeignClient.getSkuPrice(cartInfo.getSkuId()));
         }

@@ -31,7 +31,6 @@ target/
 /**/.classpath
 **/rebel.xml
 /**/.externalToolBuilders/
-/**/.yml
 application.properties
 .gitignore
 rebel.xml
