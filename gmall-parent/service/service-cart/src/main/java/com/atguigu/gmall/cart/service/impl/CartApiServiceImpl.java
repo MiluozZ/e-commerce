@@ -39,6 +39,7 @@ public class CartApiServiceImpl implements CartApiService {
         if (null != cartInfo){
             //在购物车中，如包含商品，增加商品数量
             cartInfo.setSkuNum(cartInfo.getSkuNum() + skuNum);
+            cartApiMapper.updateById(cartInfo);
             //返回添加的商品
             CartInfo cartInfo1 = cartInfo;
             cartInfo1.setSkuNum(skuNum);
@@ -129,6 +130,12 @@ public class CartApiServiceImpl implements CartApiService {
         cartInfo.setUserId(userId);
         cartInfo.setIsChecked(isChecked);
         cartApiMapper.update(cartInfo,new QueryWrapper<CartInfo>().eq("user_id",userId).eq("sku_id",skuId));
+    }
+
+    //    //删除购物车商品
+    @Override
+    public void deleteCart(String userId, Long skuId) {
+        cartApiMapper.delete(new QueryWrapper<CartInfo>().eq("user_id",userId).eq("sku_id",skuId));
     }
 
 

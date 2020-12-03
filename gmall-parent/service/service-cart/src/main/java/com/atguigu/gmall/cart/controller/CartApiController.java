@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -57,6 +54,15 @@ public class CartApiController {
     public Result checkCart(@PathVariable Long skuId,@PathVariable Integer isChecked,HttpServletRequest request){
         String userId = AuthContextHolder.getUserId(request);
         cartApiService.checkCart(userId,skuId,isChecked);
+        return Result.ok();
+    }
+
+    //删除购物车商品
+    @ApiOperation("删除购物车商品")
+    @DeleteMapping("/deleteCart/{skuId}")
+    public Result deleteCart(@PathVariable Long skuId,HttpServletRequest request){
+        String userId = AuthContextHolder.getUserId(request);
+        cartApiService.deleteCart(userId,skuId);
         return Result.ok();
     }
 }

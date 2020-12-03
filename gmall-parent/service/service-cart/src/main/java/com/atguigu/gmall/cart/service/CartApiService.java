@@ -14,4 +14,6 @@ public interface CartApiService {
     List<CartInfo> cartList(String userId, String userTempId);
 
     void checkCart(String userId,Long skuId, Integer isChecked);
+
+    void deleteCart(String userId, Long skuId);
 }
