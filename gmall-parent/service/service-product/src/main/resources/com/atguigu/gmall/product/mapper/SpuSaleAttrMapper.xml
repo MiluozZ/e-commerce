@@ -43,6 +43,6 @@
         LEFT JOIN sku_sale_attr_value sksav
         ON sksav.`sale_attr_value_id` = spsav.`id` AND sku_id = #{skuId}
         WHERE spsa.`spu_id` = #{spuId}
-        GROUP by spsav.`id`
+        ORDER by spsav.`id`
     </select>
 </mapper>
