@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +137,17 @@ public class CartApiServiceImpl implements CartApiService {
     @Override
     public void deleteCart(String userId, Long skuId) {
         cartApiMapper.delete(new QueryWrapper<CartInfo>().eq("user_id",userId).eq("sku_id",skuId));
+    }
+
+    //购物车结算商品
+    @Override
+    public List<CartInfo> toOrder(String userId) {
+        List<CartInfo> cartInfoList = cartApiMapper.selectList(new QueryWrapper<CartInfo>().eq("user_id", userId).eq("is_Checked", 1));
+        for (CartInfo cartInfo : cartInfoList) {
+            BigDecimal skuPrice = productFeignClient.getSkuPrice(cartInfo.getSkuId());
+            cartInfo.setSkuPrice(skuPrice);
+        }
+        return cartInfoList;
     }
 
 

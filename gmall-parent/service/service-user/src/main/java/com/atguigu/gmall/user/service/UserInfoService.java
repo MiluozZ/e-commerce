@@ -1,6 +1,7 @@
 package com.atguigu.gmall.user.service;
 
 import com.atguigu.gmall.model.user.UserAddress;
+import com.atguigu.gmall.model.user.UserInfo;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  **/
 public interface UserInfoService {
     List<UserAddress> getAddressList(String userId);
+
+    UserInfo getUserInfo(String userId);
 }

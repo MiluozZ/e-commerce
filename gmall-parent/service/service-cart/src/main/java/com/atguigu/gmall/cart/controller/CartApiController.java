@@ -65,4 +65,12 @@ public class CartApiController {
         cartApiService.deleteCart(userId,skuId);
         return Result.ok();
     }
+
+    //购物车结算
+    @ApiOperation("购物车结算")
+    @GetMapping("/toOrder")
+    public List<CartInfo> toOrder(HttpServletRequest request){
+        String userId = AuthContextHolder.getUserId(request);
+        return cartApiService.toOrder(userId);
+    }
 }

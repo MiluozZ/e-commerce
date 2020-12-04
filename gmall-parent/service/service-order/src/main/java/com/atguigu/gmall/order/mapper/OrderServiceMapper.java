@@ -1,6 +1,6 @@
-package com.atguigu.gmall.user.mapper;
+package com.atguigu.gmall.order.mapper;
 
-import com.atguigu.gmall.model.user.UserInfo;
+import com.atguigu.gmall.model.order.OrderInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Component;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Component;
  * @description
  **/
 @Component
-public interface UserInfoMapper extends BaseMapper<UserInfo> {
+public interface OrderServiceMapper extends BaseMapper<OrderInfo> {
 }

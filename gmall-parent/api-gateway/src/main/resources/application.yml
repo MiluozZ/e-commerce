@@ -20,6 +20,10 @@ spring:
           uri: lb://service-user
           predicates:
             - Path=/*/user/**
+        - id: service-order
+          uri: lb://service-order
+          predicates:
+            - Path=/*/order/**
         - id: service-item
           uri: lb://service-item
           predicates:
