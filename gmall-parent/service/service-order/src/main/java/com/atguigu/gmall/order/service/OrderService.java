@@ -7,5 +7,9 @@ import com.atguigu.gmall.model.order.OrderInfo;
  * @description
  **/
 public interface OrderService {
-    OrderInfo createOrder(String userId);
+
+
+    Boolean hasStock(Long skuId, Integer skuNum);
+
+    Long saveOrderInfo(OrderInfo orderInfo);
 }
