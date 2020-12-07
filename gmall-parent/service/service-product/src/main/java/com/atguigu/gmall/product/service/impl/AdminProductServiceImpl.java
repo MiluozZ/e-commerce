@@ -217,7 +217,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         skuInfo.setIsSale(0);
         skuInfoMapper.updateById(skuInfo);
         //下架同时将信息从ES索引库删除
-        serviceListClient.cancelSale(skuId);
+        rabbitTool.sendMessage(MQConst.EXCHANGE_DIRECT_GOODS,MQConst.ROUTING_GOODS_LOWER,skuId);
 
     }
 }

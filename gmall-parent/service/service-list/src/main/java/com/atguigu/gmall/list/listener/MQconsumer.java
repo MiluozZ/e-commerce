@@ -33,4 +33,18 @@ public class MQconsumer {
             e.printStackTrace();
         }
     }
+
+    @RabbitListener(bindings = {@QueueBinding(
+            exchange = @Exchange(MQConst.EXCHANGE_DIRECT_GOODS),
+            value = @Queue(value = MQConst.QUEUE_GOODS_LOWER , durable = "true",autoDelete = "false"),
+            key = {MQConst.ROUTING_GOODS_LOWER}
+    )})
+    public void cancleSaleConsumer(Long skuId, Channel channel, Message message){
+        try {
+            listSearchService.cancelSale(skuId);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
