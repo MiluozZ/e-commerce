@@ -37,10 +37,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <defaultGoal>compile</defaultGoal>
-        <finalName>service-base</finalName>
-    </build>
 
 
 </project>
