@@ -14,8 +14,8 @@ spring:
       transport:
         dashboard: http://106.14.242.86:8858
   rabbitmq:
-    host: 106.14.242.86
-    port: 15672
+    host: 192.168.200.128
+    port: 5672
     username: guest
     password: guest
   redis:
