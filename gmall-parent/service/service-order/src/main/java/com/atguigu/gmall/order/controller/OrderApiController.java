@@ -68,4 +68,11 @@ public class OrderApiController {
         return Result.ok(orderId);
 
     }
+
+    //根据Id获取订单信息
+    @ApiOperation("根据id获取订单信息")
+    @GetMapping("/auth/orderInfo")
+    public OrderInfo getOrderInfoById(Long orderId){
+        return orderService.getOrderInfoById(orderId);
+    }
 }

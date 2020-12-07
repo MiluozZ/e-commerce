@@ -99,4 +99,9 @@ public class OrderServiceImpl implements OrderService {
 
         return null;
     }
+
+    @Override
+    public OrderInfo getOrderInfoById(Long orderId) {
+        return orderServiceMapper.selectById(orderId);
+    }
 }
