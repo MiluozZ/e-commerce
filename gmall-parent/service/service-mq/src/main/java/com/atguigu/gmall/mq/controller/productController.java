@@ -34,7 +34,7 @@ public class productController {
     @GetMapping("/product")
     @ApiOperation("消息生产")
     public Result product(){
-        rabbitTool.sendMessage("exchangeTest","routingKeyTest","Rabbit测试");
+        rabbitTool.sendMessage("exchangeTest","routingKeyTest1","Rabbit测试");
         return Result.ok();
     }
 }

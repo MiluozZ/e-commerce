@@ -18,7 +18,7 @@ public class consumer {
     public void consumeMsg(String msg, Channel channel, Message message){
         System.out.println(msg);
         try {
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(),true);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
         } catch (IOException e) {
             e.printStackTrace();
         }
