@@ -1,9 +1,11 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.atguigu.gmall.constans.MQConst;
 import com.atguigu.gmall.list.feign.ServiceListClient;
 import com.atguigu.gmall.model.product.*;
 import com.atguigu.gmall.product.mapper.*;
 import com.atguigu.gmall.product.service.AdminProductService;
+import com.atguigu.gmall.util.RabbitTool;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,6 +52,8 @@ public class AdminProductServiceImpl implements AdminProductService {
     private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
     @Autowired
     private ServiceListClient serviceListClient;
+    @Autowired
+    private RabbitTool rabbitTool;
 
 
 
@@ -202,7 +206,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         skuInfo.setIsSale(1);
         skuInfoMapper.updateById(skuInfo);
         //上架同时将信息传入ES索引库
-        serviceListClient.onSale(skuId);
+        rabbitTool.sendMessage(MQConst.EXCHANGE_DIRECT_GOODS,MQConst.ROUTING_GOODS_UPPER,skuId);
 
     }
 
