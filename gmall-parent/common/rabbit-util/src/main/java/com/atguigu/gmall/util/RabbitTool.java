@@ -41,6 +41,28 @@ public class RabbitTool {
         rabbitTemplate.convertAndSend(exchange, routingKey, message, correlationData);
     }
 
+    public void sendDeadMessage(String exchange,String routingKey , String message,int delayTime){
+        GmallCorrelationData gmallCorrelationData = new GmallCorrelationData();
+        //UUID
+        String uuid = UUID.randomUUID().toString();
+        gmallCorrelationData.setId(uuid);
+        //交换机
+        gmallCorrelationData.setExchange(exchange);
+        //路由Key
+        gmallCorrelationData.setRoutingKey(routingKey);
+        //消息
+        gmallCorrelationData.setMessage(message);
+        //过期时间
+        gmallCorrelationData.setDelayTime(delayTime);
+
+        redisTemplate.opsForValue().set(uuid, JSONObject.toJSONString(gmallCorrelationData));
+        rabbitTemplate.convertAndSend(exchange,routingKey,message,(msg) ->{
+            //死信过期时间  TTL  ms     6*1000  == 6s
+            msg.getMessageProperties().setExpiration(String.valueOf(delayTime*1000));
+            return msg;
+        },gmallCorrelationData);
+    }
+
 
 //    public void sendMessage(String exchange,String routingKey,String message){
 //        GmallCorrelationData gmallCorrelationData = new GmallCorrelationData();
