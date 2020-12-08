@@ -93,11 +93,11 @@ public class OrderServiceImpl implements OrderService {
                     .eq("user_id",orderInfo.getUserId());
             wrapper.or();
         }
-        //保存订单后删除购物车商品
+        //TODO 保存订单后删除购物车商品
         //TODO 通过MQ延迟删除
 
 
-        return null;
+        return orderInfo.getId();
     }
 
     @Override
