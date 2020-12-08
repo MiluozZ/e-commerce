@@ -4,6 +4,7 @@ import com.atguigu.gmall.model.order.OrderInfo;
 import com.atguigu.gmall.order.feign.impl.OrderFeignClientImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author Miluo
@@ -15,6 +16,6 @@ public interface OrderFeignClient {
     String getTradeNo();
 
     //根据Id获取订单信息
-    @GetMapping("/api/order/auth/orderInfo")
-    OrderInfo getOrderInfoById(Long orderId);
+    @GetMapping("/api/order/inner/orderInfo/{orderId}")
+    OrderInfo getOrderInfoById(@PathVariable Long orderId);
 }

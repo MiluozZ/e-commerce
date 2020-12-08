@@ -71,8 +71,8 @@ public class OrderApiController {
 
     //根据Id获取订单信息
     @ApiOperation("根据id获取订单信息")
-    @GetMapping("/auth/orderInfo")
-    public OrderInfo getOrderInfoById(Long orderId){
+    @GetMapping("/inner/orderInfo/{orderId}")
+    public OrderInfo getOrderInfoById(@PathVariable Long orderId){
         return orderService.getOrderInfoById(orderId);
     }
 }
