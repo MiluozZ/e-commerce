@@ -35,8 +35,8 @@ public class AlipayServiceImpl implements AlipayService {
             AlipayClient alipayClient = alipayConfig.alipayClient();
             AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
 
-//            request.setReturnUrl( AlipayConfig.return_payment_url );
-//            request.setNotifyUrl( AlipayConfig.notify_payment_url ); //在公共参数中设置回跳和通知地址
+            request.setReturnUrl( AlipayConfig.return_payment_url );
+            request.setNotifyUrl( AlipayConfig.notify_payment_url ); //在公共参数中设置回跳和通知地址
 
             Map<String, Object> map = new HashMap<>();
             //官方文档必填项

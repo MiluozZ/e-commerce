@@ -1,5 +1,6 @@
 package com.atguigu.gmall.payment.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.model.enums.PaymentStatus;
 import com.atguigu.gmall.model.enums.PaymentType;
 import com.atguigu.gmall.model.order.OrderInfo;
@@ -7,10 +8,12 @@ import com.atguigu.gmall.model.payment.PaymentInfo;
 import com.atguigu.gmall.order.feign.OrderFeignClient;
 import com.atguigu.gmall.payment.mapper.PaymentMapper;
 import com.atguigu.gmall.payment.service.PaymentService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author Miluo
@@ -39,5 +42,21 @@ public class PaymentServiceImpl implements PaymentService {
             return paymentInfo;
         }
         return null;
+    }
+
+    @Override
+    public void updateByOutTradeNo(Map<String, String> paramsMap) {
+        String outTradeNo = paramsMap.get("out_trade_no");
+        PaymentInfo paymentInfo = paymentMapper.selectOne(new QueryWrapper<PaymentInfo>().eq("out_trade_no", outTradeNo));
+        if (paymentInfo != null){
+            //更新支付表信息
+            paymentInfo.setTradeNo(paramsMap.get("trade_no"));
+            paymentInfo.setCallbackTime(new Date());
+            paymentInfo.setCallbackContent(JSONObject.toJSONString(paramsMap));
+            paymentMapper.updateById(paymentInfo);
+            //TODO 通过MQ让订单表修改订单状态
+
+        }
+
     }
 }
