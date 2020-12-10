@@ -23,7 +23,7 @@ public class PayController {
         return "payment/pay";
     }
 
-    @GetMapping("success.html")
+    @GetMapping("/pay/success.html")
     public String success(){
         return "payment/success";
     }

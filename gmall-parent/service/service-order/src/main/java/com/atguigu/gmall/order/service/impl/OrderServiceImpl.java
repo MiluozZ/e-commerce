@@ -5,15 +5,14 @@ import com.atguigu.gmall.model.cart.CartInfo;
 import com.atguigu.gmall.model.enums.OrderStatus;
 import com.atguigu.gmall.model.order.OrderDetail;
 import com.atguigu.gmall.model.order.OrderInfo;
+import com.atguigu.gmall.order.mapper.CartMapper;
 import com.atguigu.gmall.order.mapper.OrderDetailMapper;
 import com.atguigu.gmall.order.mapper.OrderServiceMapper;
 import com.atguigu.gmall.order.service.OrderService;
 import com.atguigu.gmall.product.client.feign.ProductFeignClient;
-import com.atguigu.gmall.user.feign.UserFeignClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,9 +34,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailMapper orderDetailMapper;
     @Autowired
-    private UserFeignClient userFeignClient;
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private CartMapper cartMapper;
     @Value("${ware.url}")
     private String wareUrl;
 
@@ -93,8 +90,10 @@ public class OrderServiceImpl implements OrderService {
                     .eq("user_id",orderInfo.getUserId());
             wrapper.or();
         }
-        //TODO 保存订单后删除购物车商品
-        //TODO 通过MQ延迟删除
+        //保存订单后删除购物车商品
+        cartMapper.delete(wrapper);
+
+        //TODO 通过MQ延迟删除订单 （两小时未支付）
 
 
         return orderInfo.getId();
