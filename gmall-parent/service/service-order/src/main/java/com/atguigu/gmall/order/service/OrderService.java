@@ -14,4 +14,6 @@ public interface OrderService {
     Long saveOrderInfo(OrderInfo orderInfo);
 
     OrderInfo getOrderInfoById(Long orderId);
+
+    void updateInfoAfterPay(Long orderId);
 }

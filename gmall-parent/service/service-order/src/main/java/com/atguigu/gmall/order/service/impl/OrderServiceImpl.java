@@ -3,6 +3,8 @@ package com.atguigu.gmall.order.service.impl;
 import com.atguigu.gmall.common.util.HttpClientUtil;
 import com.atguigu.gmall.model.cart.CartInfo;
 import com.atguigu.gmall.model.enums.OrderStatus;
+import com.atguigu.gmall.model.enums.PaymentStatus;
+import com.atguigu.gmall.model.enums.PaymentWay;
 import com.atguigu.gmall.model.order.OrderDetail;
 import com.atguigu.gmall.model.order.OrderInfo;
 import com.atguigu.gmall.order.mapper.CartMapper;
@@ -62,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
         Date expireTime = calendar.getTime();
         orderInfo.setCreateTime(createTime);
         orderInfo.setExpireTime(expireTime);
+        orderInfo.setPaymentWay(PaymentWay.ONLINE.name());
 
         //订单内容
         StringBuilder sb = new StringBuilder();
@@ -102,5 +105,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderInfo getOrderInfoById(Long orderId) {
         return orderServiceMapper.selectById(orderId);
+    }
+
+    @Override
+    public void updateInfoAfterPay(Long orderId) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(orderId);
+        orderInfo.setOrderStatus(PaymentStatus.PAID.name());
+        orderInfo.setProcessStatus(PaymentStatus.PAID.name());
+        orderServiceMapper.updateById(orderInfo);
+        System.out.println("订单已修改");
     }
 }
